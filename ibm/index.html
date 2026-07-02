@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Investment Club — IBM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Caveat:wght@500;600;700&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --paper:#F1EADC;
+    --paper-2:#FBF7EE;
+    --ink:#2B2620;
+    --ink-soft:#6E6355;
+    --green:#33503F;
+    --green-deep:#22392C;
+    --rust:#B5651D;
+    --gold:#C98A2D;
+    --line:#DDD2BC;
+    --hand:"Caveat", cursive;
+    --head:"Lora", Georgia, serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{scroll-behavior:smooth;scroll-padding-top:112px;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--head);
+    font-size:18px;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  body::before{
+    content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size:180px 180px;
+    opacity:.04;mix-blend-mode:multiply;
+  }
+  body > *{position:relative;z-index:1;}
+  .wrap{max-width:840px;margin:0 auto;padding:0 32px;}
+
+  /* ---- NAV ---- */
+  .stickyhead{position:sticky;top:0;z-index:50;background:rgba(241,234,220,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  nav{}
+  .nav-in{max-width:1080px;margin:0 auto;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px;}
+
+  /* ---- SUBNAV ---- */
+  .subnav{border-top:1px solid var(--line);}
+  .subnav-in{
+    max-width:1080px;margin:0 auto;padding:0 32px;
+    display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;
+  }
+  .subnav-in::-webkit-scrollbar{display:none;}
+  .subnav-in a{
+    flex:none;font-family:var(--head);font-weight:600;font-size:14.5px;
+    color:var(--ink-soft);text-decoration:none;padding:12px 0;
+    border-bottom:2px solid transparent;white-space:nowrap;
+    transition:color .18s,border-color .18s;
+  }
+  .subnav-in a:hover{color:var(--green-deep);}
+  .subnav-in a.active{color:var(--green-deep);border-bottom-color:var(--green-deep);}
+  .burger-menu a.active{color:var(--green-deep);font-weight:700;}
+  .club-name{font-family:var(--head);font-weight:700;font-size:21px;color:var(--green-deep);letter-spacing:-.01em;text-decoration:none;}
+  .club-name span{font-family:var(--hand);font-weight:600;color:var(--rust);font-size:23px;margin-left:2px;}
+
+  .weekpicker{position:relative;}
+  .weekpicker-btn{
+    display:flex;align-items:center;gap:8px;
+    font-family:var(--head);font-weight:600;font-size:17px;color:var(--green-deep);
+    background:var(--paper-2);border:1px solid var(--line);border-radius:999px;
+    padding:8px 16px;cursor:pointer;
+  }
+  .weekpicker-btn svg{width:14px;height:14px;flex:none;transition:transform .2s;}
+  .weekpicker.open .weekpicker-btn svg{transform:rotate(180deg);}
+  .weekpicker-menu{
+    position:absolute;top:calc(100% + 8px);right:0;min-width:240px;
+    background:var(--paper-2);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 18px 34px -18px rgba(40,30,20,.35);
+    padding:6px;display:none;
+  }
+  .weekpicker.open .weekpicker-menu{display:block;}
+  .weekpicker-menu a{
+    display:flex;justify-content:space-between;gap:10px;
+    padding:9px 12px;border-radius:8px;text-decoration:none;
+    font-family:var(--head);font-size:15px;color:var(--ink);
+  }
+  .weekpicker-menu a:hover{background:var(--paper);}
+  .weekpicker-menu a.current{color:var(--rust);font-weight:600;}
+  .weekpicker-menu .wd{font-size:13px;color:var(--ink-soft);}
+
+  /* ---- HAMBURGER (mobile section nav) ---- */
+  .navburger{
+    display:none;align-items:center;justify-content:center;
+    width:40px;height:40px;flex:none;
+    background:var(--paper-2);border:1px solid var(--line);border-radius:10px;
+    cursor:pointer;color:var(--green-deep);position:relative;
+  }
+  .navburger svg{width:19px;height:19px;display:block;}
+  .navgroup{display:flex;align-items:center;gap:10px;}
+  .burger-menu{
+    position:absolute;top:calc(100% + 8px);right:0;min-width:210px;
+    background:var(--paper-2);border:1px solid var(--line);border-radius:12px;
+    box-shadow:0 18px 34px -18px rgba(40,30,20,.35);
+    padding:6px;display:none;
+  }
+  .navburger.open .burger-menu{display:block;}
+  .burger-menu a{
+    display:block;padding:10px 12px;border-radius:8px;text-decoration:none;
+    font-family:var(--head);font-weight:600;font-size:15px;color:var(--ink);
+  }
+  .burger-menu a:hover{background:var(--paper);}
+  @media(max-width:700px){
+    .subnav{display:none;}
+    .navburger{display:flex;}
+  }
+
+  /* ---- HERO ---- */
+  .hero{padding:64px 0 10px;text-align:center;}
+  .hero-kicker{font-family:var(--hand);font-weight:600;font-size:22px;color:var(--rust);margin-bottom:6px;}
+  .hero-ticker{
+    display:inline-flex;align-items:center;gap:10px;
+    font-family:var(--head);font-weight:600;font-size:14px;letter-spacing:.06em;
+    color:var(--green-deep);background:var(--paper-2);border:1px solid var(--line);
+    border-radius:999px;padding:6px 16px;margin-bottom:22px;
+  }
+  .hero-ticker b{color:var(--rust);}
+  .live-badge{
+    display:inline-flex;align-items:center;gap:6px;margin-left:4px;
+    font-family:var(--head);font-weight:600;font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;
+    color:var(--green);
+  }
+  .live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex:none;animation:pulse 1.8s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
+  .price-up{color:var(--green);font-weight:600;}
+  .price-down{color:#A3391E;font-weight:600;}
+  .hero-title{font-family:var(--head);font-weight:700;font-size:clamp(34px,6vw,50px);line-height:1.08;letter-spacing:-.01em;color:var(--green-deep);}
+  .hero-one{font-style:italic;font-size:22px;color:var(--ink);max-width:600px;margin:20px auto 0;}
+  .price-row{display:flex;justify-content:center;gap:28px;margin-top:30px;flex-wrap:wrap;}
+  .price-row .pv{text-align:center;}
+  .price-row .pv b{display:block;font-family:var(--head);font-weight:700;font-size:26px;color:var(--green-deep);}
+  .price-row .pv span{font-family:var(--head);font-weight:500;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);}
+
+  /* ---- SECTION SCAFFOLD ---- */
+  section{padding:56px 0;border-top:1px solid var(--line);}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:20px;}
+  .sec-num{font-family:var(--hand);font-weight:700;font-size:26px;color:var(--rust);flex:none;}
+  .sec-title{font-family:var(--head);font-weight:700;font-size:clamp(26px,4vw,34px);letter-spacing:-.01em;color:var(--green-deep);}
+  .sec-intro{font-size:18.5px;line-height:1.65;max-width:680px;color:var(--ink);}
+  .sec-intro + .sec-intro{margin-top:16px;}
+
+  /* segment bars */
+  .segs{margin-top:26px;}
+  .seg-row{display:grid;grid-template-columns:110px 1fr 46px;align-items:center;gap:12px;margin-bottom:9px;}
+  .seg-row .nm{font-family:var(--head);font-weight:600;font-size:14.5px;color:var(--ink);}
+  .seg-bar{height:10px;background:var(--line);border-radius:6px;overflow:hidden;}
+  .seg-bar i{display:block;height:100%;background:var(--green);border-radius:6px;}
+  .seg-row .pc{font-family:var(--head);font-weight:600;font-size:13.5px;color:var(--ink-soft);text-align:right;}
+  .seg-note{font-family:var(--hand);font-size:16px;color:var(--ink-soft);margin-top:10px;}
+
+  /* metric grid */
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:24px;}
+  .metric{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .metric .lbl{font-family:var(--head);font-weight:500;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);}
+  .metric .val{font-family:var(--head);font-weight:700;font-size:19px;color:var(--green-deep);margin-top:3px;}
+  .note-block{
+    margin-top:24px;border-left:3px solid var(--rust);
+    padding:2px 0 2px 20px;font-size:17px;color:var(--ink);
+  }
+
+  /* snapshot chips on hero */
+  .snap-chips{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:26px;}
+  .snap-chip{
+    font-family:var(--head);font-weight:600;font-size:13.5px;
+    border:1px solid var(--line);border-radius:999px;
+    padding:7px 15px;color:var(--ink);background:var(--paper-2);
+  }
+  .snap-chip b{color:var(--green-deep);}
+
+  /* thesis */
+  .verdict-badge{
+    display:inline-block;font-family:var(--head);font-weight:700;font-size:16px;
+    color:#fff;background:var(--green);border-radius:8px;padding:8px 18px;margin-bottom:18px;
+  }
+  .ratings{display:grid;gap:10px;margin-top:20px;}
+  .rating-row{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .rating-row .src{font-family:var(--head);font-weight:600;font-size:14.5px;color:var(--ink);}
+  .rating-row .valv{font-family:var(--head);font-size:14.5px;color:var(--ink-soft);text-align:right;}
+  .targets{display:flex;gap:14px;margin-top:20px;flex-wrap:wrap;}
+  .target-card{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:14px 18px;flex:1;min-width:180px;}
+  .target-card .src{font-family:var(--head);font-weight:500;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);}
+  .target-card .val{font-family:var(--head);font-weight:700;font-size:22px;color:var(--green-deep);margin-top:2px;}
+  .target-card .up{font-family:var(--head);font-weight:600;font-size:13px;color:var(--rust);}
+  .take-label{font-family:var(--hand);font-weight:600;font-size:20px;color:var(--rust);margin-top:26px;display:block;}
+
+  /* risks */
+  .risk-list{list-style:none;margin-top:8px;}
+  .risk-list li{
+    position:relative;padding:12px 0 12px 26px;border-bottom:1px solid var(--line);
+    font-size:17.5px;color:var(--ink);line-height:1.55;
+  }
+  .risk-list li::before{content:"\2013";position:absolute;left:0;top:12px;color:var(--rust);font-weight:700;}
+
+  /* news */
+  .news-list{display:grid;gap:16px;margin-top:22px;}
+  .news-card{background:var(--paper-2);border:1px solid var(--line);border-radius:10px;padding:20px 22px;}
+  .news-card .nh{display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .news-card h3{font-family:var(--head);font-weight:700;font-size:19px;color:var(--green-deep);}
+  .news-card .nsrc{font-family:var(--head);font-weight:500;font-size:12.5px;color:var(--ink-soft);white-space:nowrap;}
+  .news-card p{font-size:16.5px;line-height:1.55;color:var(--ink);margin-top:10px;}
+  .news-card .sowhy{margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);}
+  .news-card .sowhy b{font-family:var(--hand);font-weight:600;color:var(--rust);font-size:17px;}
+  .news-card a.dl{
+    display:inline-block;margin-top:12px;
+    font-family:var(--head);font-weight:600;font-size:13.5px;color:var(--rust);
+    text-decoration:none;border-bottom:1px solid transparent;transition:border-color .18s;
+  }
+  .news-card a.dl:hover{border-bottom-color:var(--rust);}
+
+  /* headline carousel */
+  .hl-carousel{display:flex;gap:14px;margin-top:18px;overflow-x:auto;scroll-snap-type:x proximity;padding-bottom:4px;}
+  .hl-card{
+    scroll-snap-align:start;flex:0 0 240px;
+    background:var(--paper-2);border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;display:block;overflow:hidden;transition:border-color .18s;
+  }
+  .hl-card:hover{border-color:var(--rust);}
+  .hl-thumb{
+    height:64px;display:flex;align-items:center;justify-content:center;
+    background:var(--green-deep);color:var(--paper-2);
+    font-family:var(--head);font-weight:700;font-size:20px;letter-spacing:.03em;
+  }
+  .hl-body{padding:14px 16px;}
+  .hl-body h4{font-family:var(--head);font-weight:700;font-size:14.5px;line-height:1.4;color:var(--ink);}
+  .hl-body .hl-src{display:block;margin-top:8px;font-family:var(--head);font-weight:500;font-size:11.5px;color:var(--ink-soft);}
+  .hl-more{
+    display:inline-block;margin-top:14px;
+    font-family:var(--head);font-weight:600;font-size:13.5px;color:var(--rust);
+    text-decoration:none;border-bottom:1px solid transparent;transition:border-color .18s;
+  }
+  .hl-more:hover{border-bottom-color:var(--rust);}
+
+  /* pdf note cards */
+  .pdf-grid{display:grid;grid-template-columns:1fr;gap:20px;margin-top:24px;}
+  @media(min-width:680px){ .pdf-grid{grid-template-columns:1fr 1fr;} }
+  .pdf-card{
+    background:var(--paper-2);border:1px solid var(--line);border-radius:4px;
+    padding:22px 22px 20px;position:relative;box-shadow:0 10px 22px -16px rgba(40,30,20,.35);
+  }
+  .pdf-card::before{
+    content:"";position:absolute;top:-9px;left:50%;transform:translateX(-50%) rotate(-2deg);
+    width:64px;height:20px;background:rgba(201,138,45,.55);border-radius:2px;
+  }
+  .pdf-card h3{font-family:var(--head);font-weight:700;font-size:17px;color:var(--green-deep);margin-bottom:2px;}
+  .pdf-card .pdf-date{font-family:var(--head);font-weight:500;font-size:12px;color:var(--ink-soft);margin-bottom:12px;}
+  .pdf-card ul{list-style:none;margin-bottom:14px;}
+  .pdf-card ul li{position:relative;padding:6px 0 6px 18px;font-size:15px;line-height:1.5;color:var(--ink);}
+  .pdf-card ul li::before{content:"\2022";position:absolute;left:2px;color:var(--rust);}
+  .pdf-card a.dl{
+    font-family:var(--head);font-weight:600;font-size:13.5px;color:var(--rust);
+    text-decoration:none;border-bottom:1px solid transparent;transition:border-color .18s;
+  }
+  .pdf-card a.dl:hover{border-bottom-color:var(--rust);}
+
+  /* video / podcast */
+  .media-embed{
+    margin-top:22px;border:1px solid var(--line);border-radius:10px;overflow:hidden;
+    position:relative;
+  }
+  .media-embed.video{aspect-ratio:16/9;background:#000;}
+  .media-embed iframe{display:block;width:100%;height:100%;border:0;}
+  .media-cap{font-family:var(--head);font-weight:500;font-size:13px;color:var(--ink-soft);margin-top:8px;}
+  .media-cap a{color:var(--rust);text-decoration:none;border-bottom:1px solid transparent;}
+  .media-cap a:hover{border-bottom-color:var(--rust);}
+  .synth-label{font-family:var(--hand);font-weight:600;font-size:19px;color:var(--rust);display:block;margin:20px 0 4px;}
+  .media-sub{font-family:var(--head);font-weight:700;font-size:20px;color:var(--green-deep);}
+  .media-sub-2{margin-top:44px;padding-top:36px;border-top:1px solid var(--line);}
+
+  /* ---- FOOTER ---- */
+  footer{border-top:1px solid var(--line);background:var(--green-deep);color:var(--paper-2);padding:50px 0;text-align:center;}
+  footer .f-note{font-family:var(--hand);font-size:22px;color:var(--paper-2);}
+  footer .f-cred{font-family:var(--head);font-size:13px;letter-spacing:.05em;color:#a7b3ab;margin-top:14px;}
+
+  /* ---- BACK TO TOP ---- */
+  .to-top{
+    position:fixed;right:26px;bottom:26px;z-index:60;
+    height:44px;padding:0 18px 0 16px;border-radius:999px;
+    background:var(--rust);color:var(--paper-2);border:0;cursor:pointer;
+    display:flex;align-items:center;gap:8px;
+    box-shadow:0 10px 24px -8px rgba(40,30,20,.45);
+    opacity:0;visibility:hidden;transform:translateY(14px);
+    transition:opacity .25s,transform .25s,visibility .25s,background .18s;
+  }
+  .to-top.show{opacity:1;visibility:visible;transform:translateY(0);}
+  .to-top:hover{background:var(--green-deep);}
+  .to-top svg{width:18px;height:18px;display:block;flex:none;}
+  .to-top span{font-family:var(--head);font-weight:600;font-size:13.5px;letter-spacing:.03em;white-space:nowrap;}
+  @media(max-width:760px){.to-top{right:18px;bottom:18px;height:42px;}}
+</style>
+</head>
+<body>
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#F1EADC"/>
+    <rect x="26" y="26" width="48" height="48" fill="none" stroke="#33503F" stroke-width="4"/>
+    <path d="M34 58 L46 44 L56 52 L66 38" fill="none" stroke="#B5651D" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</template>
+
+<div class="stickyhead">
+  <nav id="nav">
+    <div class="nav-in">
+      <a class="club-name" href="https://andy-duback.github.io/dmz/">DMZ<span>Investment Club</span></a>
+      <div class="navgroup">
+        <div class="navburger" id="navburger">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          <div class="burger-menu" id="burgerMenu"></div>
+        </div>
+        <div class="weekpicker" id="weekpicker">
+          <button class="weekpicker-btn" id="weekBtn">
+            <span id="weekBtnLabel">This Week</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="weekpicker-menu" id="weekMenu"></div>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <div class="subnav">
+    <div class="subnav-in">
+      <a href="#overview">Overview</a>
+      <a href="#financials">Financials</a>
+      <a href="#diligence">Diligence</a>
+      <a href="#news">News &amp; Media</a>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-kicker" id="weekLabel"></div>
+    <div class="hero-ticker" id="tickerLine"></div>
+    <h1 class="hero-title" id="companyTitle"></h1>
+    <p class="hero-one" id="oneLiner"></p>
+    <div class="snap-chips" id="snapChips"></div>
+  </header>
+</div>
+
+<main class="wrap" id="main"></main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-cred" id="footCred"></div>
+  </div>
+</footer>
+
+<button class="to-top" id="toTop" aria-label="Go to top">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  <span>Go to top</span>
+</button>
+
+<script src="../assets/weeks-data.js"></script>
+<script src="../assets/price-feed.js"></script>
+<script src="../assets/news-feed.js"></script>
+<script src="../assets/financials-feed.js"></script>
+<script src="assets/ibm-data.js"></script>
+<script>
+(function(){
+  const P = window.PICK;
+  const WEEKS = window.WEEKS || [];
+  const THIS_SLUG = "ibm"; // this page's own folder name at the repo root
+
+  document.getElementById('weekLabel').textContent = P.weekLabel;
+  document.getElementById('tickerLine').innerHTML =
+    '<span id="tickerBase">'+P.ticker+' <b>\u00b7</b> '+P.exchange+' <b>\u00b7</b> $<span id="priceVal">'+P.price+'</span></span>'+
+    ' <span id="priceMeta" style="color:var(--ink-soft);font-weight:400;">('+P.priceDate+')</span>'+
+    '<span id="liveBadge" class="live-badge" style="display:none;"><i class="live-dot"></i><span id="liveText">Live</span></span>';
+  document.getElementById('companyTitle').textContent = P.company;
+  document.getElementById('oneLiner').textContent = P.oneLiner;
+  document.getElementById('footCred').textContent = "DMZ Investment Club \u00b7 presentation notes";
+
+  document.getElementById('snapChips').innerHTML = P.snapshot.map(function(s){
+    return '<div class="snap-chip" data-key="'+s.key+'"><b>'+s.value+'</b> '+s.label+'</div>';
+  }).join('');
+
+  // week picker
+  var menu = document.getElementById('weekMenu');
+  menu.innerHTML = WEEKS.map(function(w){
+    var cur = w.slug === THIS_SLUG ? ' current' : '';
+    return '<a class="'+cur.trim()+'" href="../'+w.slug+'/"><span>'+w.ticker+' <span style="color:var(--ink-soft);font-weight:400;">— '+w.company+'</span></span><span class="wd">'+w.date+'</span></a>';
+  }).join('') || '<a href="#">No weeks yet</a>';
+  var current = WEEKS.find(function(w){ return w.slug === THIS_SLUG; });
+  document.getElementById('weekBtnLabel').textContent = current ? current.ticker : 'This Week';
+
+  var wp = document.getElementById('weekpicker');
+  document.getElementById('weekBtn').addEventListener('click', function(e){
+    e.stopPropagation();
+    wp.classList.toggle('open');
+  });
+
+  // mobile hamburger \u2014 mirrors the subnav section links
+  document.getElementById('burgerMenu').innerHTML =
+    Array.prototype.map.call(document.querySelectorAll('.subnav-in a'), function(a){
+      return '<a href="'+a.getAttribute('href')+'">'+a.textContent+'</a>';
+    }).join('');
+  var burger = document.getElementById('navburger');
+  burger.addEventListener('click', function(e){
+    e.stopPropagation();
+    burger.classList.toggle('open');
+  });
+  document.getElementById('burgerMenu').addEventListener('click', function(e){
+    if(e.target.tagName === 'A') burger.classList.remove('open');
+  });
+  document.addEventListener('click', function(){ wp.classList.remove('open'); burger.classList.remove('open'); });
+
+  function section(id,num,title,intro,body){
+    return '<section id="'+id+'"><div class="sec-head"><span class="sec-num">'+num+'</span>'+
+      '<h2 class="sec-title">'+title+'</h2></div>'+(intro||'')+body+'</section>';
+  }
+
+  var html = '';
+
+  // 1 Business Overview
+  html += section('overview','01','Business Overview',
+    '<p class="sec-intro">'+P.overview.p1+'</p><p class="sec-intro">'+P.overview.p2+'</p><p class="sec-intro">'+P.overview.p3+'</p>',
+    '<div class="segs">'+P.overview.segments.map(function(s){
+      return '<div class="seg-row"><div class="nm">'+s.name+'</div><div class="seg-bar"><i style="width:'+s.pct+'%"></i></div><div class="pc">'+s.pct+'%</div></div>';
+    }).join('')+'</div><div class="seg-note">'+P.overview.segNote+'</div>');
+
+  // 2 Financial Highlights
+  html += section('financials','02','Financial Highlights',
+    '',
+    '<div class="metrics">'+P.financials.metrics.map(function(m){
+      return '<div class="metric" data-key="'+m.key+'"><div class="lbl">'+m.label+'</div><div class="val">'+m.value+'</div></div>';
+    }).join('')+'</div>'+
+    '<div class="note-block">'+P.financials.q1+'</div>'+
+    '<div class="note-block">'+P.financials.estimates+'</div>'+
+    '<a href="https://finance.yahoo.com/quote/'+P.ticker+'/" target="_blank" rel="noopener noreferrer" style="display:inline-block;margin-top:20px;font-family:var(--head);font-weight:600;font-size:13.5px;color:var(--rust);text-decoration:none;border-bottom:1px solid transparent;">See full financials on Yahoo Finance \u2197</a>');
+
+  // 3 Diligence (thesis + risks + reports)
+  html += section('diligence','03','Diligence',
+    '',
+    '<h3 class="media-sub">Investment Thesis</h3>'+
+    '<div class="verdict-badge">'+P.thesis.verdict+'</div>'+
+    '<div class="ratings">'+P.thesis.ratings.map(function(r){
+      return '<div class="rating-row"><div class="src">'+r.source+'</div><div class="valv">'+r.value+'</div></div>';
+    }).join('')+'</div>'+
+    '<div class="targets">'+P.thesis.targets.map(function(t){
+      return '<div class="target-card"><div class="src">'+t.source+'</div><div class="val">'+t.value+'</div><div class="up">'+t.upside+' from current</div></div>';
+    }).join('')+'</div>'+
+    '<span class="take-label">my take, for discussion:</span>'+
+    '<p class="sec-intro">'+P.thesis.take+'</p>'+
+    '<h3 class="media-sub media-sub-2">Risks &amp; Concerns</h3>'+
+    '<ul class="risk-list">'+P.risks.map(function(r){ return '<li>'+r+'</li>'; }).join('')+'</ul>'+
+    '<h3 class="media-sub media-sub-2">Summary of the Reports</h3>'+
+    '<p class="sec-intro">Highlights from LSEG and Zack\u2019s reports \u2014 full PDFs linked below.</p>'+
+    '<div class="pdf-grid">'+P.pdfs.map(function(d){
+      return '<div class="pdf-card"><h3>'+d.title+'</h3><div class="pdf-date">'+d.date+'</div>'+
+        '<ul>'+d.takeaways.map(function(t){ return '<li>'+t+'</li>'; }).join('')+'</ul>'+
+        '<a class="dl" href="'+d.file+'" target="_blank" rel="noopener noreferrer">Open full PDF \u2197</a></div>';
+    }).join('')+'</div>');
+
+  // 4 News & Media
+  html += section('news','04','News &amp; Media',
+    '',
+    '<h3 class="media-sub">Featured Stories</h3>'+
+    '<div class="news-list">'+P.news.map(function(n){
+      return '<div class="news-card"><div class="nh"><h3>'+n.headline+'</h3><span class="nsrc">'+n.source+' \u00b7 '+n.date+'</span></div>'+
+        '<p><b style="font-family:var(--hand);font-weight:600;color:var(--rust);font-size:17px;">summary: </b>'+n.summary+'</p>'+
+        '<div class="sowhy"><b>why it matters:</b> '+n.sowhy+'</div>'+
+        '<a class="dl" href="'+n.url+'" target="_blank" rel="noopener noreferrer">Read the article \u2197</a></div>';
+    }).join('')+'</div>'+
+    '<h3 class="media-sub media-sub-2">Recent News</h3>'+
+    '<div class="hl-carousel" id="hlCarousel">'+P.headlines.map(function(h){
+      return '<a class="hl-card" href="'+h.url+'" target="_blank" rel="noopener noreferrer">'+
+        '<div class="hl-body"><h4>'+h.headline+'</h4><span class="hl-src">'+h.source+' \u00b7 '+h.date+'</span></div></a>';
+    }).join('')+'</div>'+
+    '<a class="hl-more" href="https://www.google.com/finance/quote/'+P.ticker+':'+P.exchange+'" target="_blank" rel="noopener noreferrer">More news stories about '+P.ticker+' \u2197</a>'+
+    '<h3 class="media-sub media-sub-2">Video \u2014 '+P.video.title+'</h3>'+
+    '<div class="media-embed video"><iframe src="'+P.video.embed+'" title="'+P.video.title+'" allowfullscreen loading="lazy"></iframe></div>'+
+    '<div class="media-cap">'+P.video.channel+' \u00b7 <a href="'+P.video.url+'" target="_blank" rel="noopener noreferrer">watch on YouTube \u2197</a></div>'+
+    '<span class="synth-label">summary:</span>'+
+    '<p class="sec-intro">'+P.video.summary+'</p>'+
+    '<h3 class="media-sub media-sub-2">Podcast \u2014 '+P.podcast.title+'</h3>'+
+    '<div class="media-embed"><iframe src="'+P.podcast.embed+'" title="'+P.podcast.title+'" height="152" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe></div>'+
+    '<div class="media-cap">'+P.podcast.show+' \u00b7 <a href="'+P.podcast.url+'" target="_blank" rel="noopener noreferrer">listen on Spotify \u2197</a></div>'+
+    '<span class="synth-label">synthesis:</span>'+
+    '<p class="sec-intro">'+P.podcast.synthesis+'</p>');
+
+  document.getElementById('main').innerHTML = html;
+
+  // ---- scroll-spy: highlight current section in subnav + burger menu ----
+  // Walks section offsets directly against scroll position instead of a thin
+  // IntersectionObserver band \u2014 robust regardless of how tall a section is.
+  (function(){
+    var navLinks = Array.prototype.slice.call(document.querySelectorAll('.subnav-in a, .burger-menu a'));
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    if(!sections.length) return;
+    function setActive(id){
+      navLinks.forEach(function(a){
+        a.classList.toggle('active', a.getAttribute('href') === '#'+id);
+      });
+    }
+    function headerOffset(){
+      var head = document.querySelector('.stickyhead');
+      return (head ? head.offsetHeight : 0) + 24;
+    }
+    function updateActive(){
+      var scrollPos = window.pageYOffset + headerOffset();
+      var current = sections[0].id;
+      for (var i = 0; i < sections.length; i++){
+        if (sections[i].offsetTop <= scrollPos) current = sections[i].id;
+      }
+      setActive(current);
+    }
+    var throttled = false;
+    window.addEventListener('scroll', function(){
+      updateActive();
+      if(!throttled){
+        throttled = true;
+        setTimeout(function(){
+          throttled = false;
+          updateActive();
+        }, 80);
+      }
+    }, {passive:true});
+    window.addEventListener('resize', updateActive);
+    updateActive();
+  })();
+
+  // back to top
+  var toTop = document.getElementById('toTop');
+  function onScroll(){
+    if(window.pageYOffset > 400) toTop.classList.add('show');
+    else toTop.classList.remove('show');
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+  toTop.addEventListener('click', function(){ window.scrollTo({top:0, behavior:'smooth'}); });
+
+  // ---- live headline carousel ----
+  // Uses the shared fetchLiveHeadlines() from ../assets/news-feed.js so the
+  // "Recent News" carousel stays evergreen instead of aging out. The static
+  // P.headlines rendered above is the first paint + the fallback; a
+  // successful live fetch replaces it, and the last good live fetch is
+  // cached in localStorage (with a timestamp) so a temporary network hiccup
+  // still shows real recent headlines instead of quietly going stale.
+  (function(){
+    var cacheKey = 'dmz-headlines-' + P.ticker;
+    function renderHeadlines(items){
+      if(!items || !items.length) return;
+      var carousel = document.getElementById('hlCarousel');
+      if(!carousel) return;
+      carousel.innerHTML = items.map(function(h){
+        return '<a class="hl-card" href="'+h.url+'" target="_blank" rel="noopener noreferrer">'+
+          '<div class="hl-body"><h4>'+h.headline+'</h4><span class="hl-src">'+h.source+(h.date ? ' \u00b7 '+h.date : '')+'</span></div></a>';
+      }).join('');
+    }
+    // Show cached live data immediately if we have it (fresher than the
+    // hardcoded seed), while a fresh fetch runs in the background.
+    try {
+      var cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+      if(cached && cached.items && cached.items.length) renderHeadlines(cached.items);
+    } catch(e){}
+
+    if(window.fetchLiveHeadlines){
+      window.fetchLiveHeadlines(P.ticker, 3).then(function(items){
+        if(!items || !items.length) return;
+        renderHeadlines(items);
+        try { localStorage.setItem(cacheKey, JSON.stringify({items: items, fetchedAt: Date.now()})); } catch(e){}
+      });
+    }
+  })();
+
+  // ---- live financial metrics ----
+  // Uses the shared fetchLiveFinancials() from ../assets/financials-feed.js
+  // so Market Cap, P/E, ROE, dividend, debt, and next-earnings numbers stay
+  // evergreen instead of aging out. Static values render first (instant
+  // paint + fallback); a successful live fetch overwrites just those data
+  // points in place, and the last good fetch is cached in localStorage so a
+  // temporary network hiccup still shows real recent numbers.
+  (function(){
+    var cacheKey = 'dmz-financials-' + P.ticker;
+    function setVal(key, text){
+      if(text == null) return;
+      var chip = document.querySelector('.snap-chip[data-key="'+key+'"] b');
+      if(chip) chip.textContent = text;
+      var metric = document.querySelector('.metric[data-key="'+key+'"] .val');
+      if(metric) metric.textContent = text;
+    }
+    function renderFinancials(f){
+      if(!f) return;
+      setVal('marketCap', window.formatUSDCompact(f.marketCap));
+      setVal('revenue', f.revenueTTM != null ? window.formatUSDCompact(f.revenueTTM) : null);
+      setVal('trailingPE', f.trailingPE != null ? f.trailingPE.toFixed(1) : null);
+      setVal('forwardPE', f.forwardPE != null ? f.forwardPE.toFixed(1) : null);
+      setVal('roe', f.roePct != null ? f.roePct.toFixed(1) + '%' : null);
+      setVal('dividendYield', f.dividendYieldPct != null ? f.dividendYieldPct.toFixed(1) + '%' : null);
+      if(f.dividendRate != null && f.dividendYieldPct != null){
+        setVal('dividend', '$' + f.dividendRate.toFixed(2) + ' / ' + f.dividendYieldPct.toFixed(1) + '%');
+      }
+      if(f.totalDebt != null){
+        setVal('totalDebt', window.formatUSDCompact(f.totalDebt));
+      }
+      if(f.earningsDate){
+        var d = window.formatDateShort(f.earningsDate);
+        if(d) setVal('earnings', d);
+      }
+      if(f.fiftyTwoWeekLow != null && f.fiftyTwoWeekHigh != null){
+        setVal('weekRange', '$' + Math.round(f.fiftyTwoWeekLow) + ' \u2013 $' + Math.round(f.fiftyTwoWeekHigh));
+      }
+    }
+    try {
+      var cached = JSON.parse(localStorage.getItem(cacheKey) || 'null');
+      if(cached && cached.data){
+        var revived = cached.data;
+        if(revived.earningsDate) revived.earningsDate = new Date(revived.earningsDate);
+        renderFinancials(revived);
+      }
+    } catch(e){}
+
+    if(window.fetchLiveFinancials){
+      window.fetchLiveFinancials(P.ticker).then(function(f){
+        if(!f) return;
+        renderFinancials(f);
+        try { localStorage.setItem(cacheKey, JSON.stringify({data: f, fetchedAt: Date.now()})); } catch(e){}
+      });
+    }
+  })();
+
+  // ---- live price ----
+  // Uses the shared fetchLivePrice() from ../assets/price-feed.js. If it fails
+  // (offline, endpoint blocked, rate-limited, etc.) the static price already
+  // rendered above stays put — nothing breaks either way.
+
+  function renderLivePrice(q){
+    if(!q) return;
+    var change = q.price - q.prevClose;
+    var pct = q.prevClose ? (change / q.prevClose * 100) : 0;
+    var up = change >= 0;
+    var cls = up ? 'price-up' : 'price-down';
+    var arrow = up ? '\u25B2' : '\u25BC';
+    document.getElementById('priceVal').textContent = q.price.toFixed(2);
+    var stateLabel;
+    if(q.isLive){
+      stateLabel = q.marketState === 'REGULAR' ? 'Live' : (q.marketState === 'PRE' ? 'Pre-market' : (q.marketState === 'POST' ? 'After hours' : 'Last close'));
+    } else {
+      var d = q.cachedAt ? new Date(q.cachedAt) : null;
+      stateLabel = 'Last known' + (d ? ' \u00b7 ' + d.toLocaleString('en-US', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit'}) : '');
+    }
+    document.getElementById('priceMeta').innerHTML = '<span class="'+cls+'">'+arrow+' '+Math.abs(change).toFixed(2)+' ('+Math.abs(pct).toFixed(1)+'%)</span>';
+    document.getElementById('liveText').textContent = stateLabel;
+    document.getElementById('liveBadge').style.display = 'inline-flex';
+  }
+
+  function refreshPrice(){
+    (window.fetchLivePriceCached ? window.fetchLivePriceCached(P.ticker) : Promise.resolve(null)).then(renderLivePrice);
+  }
+  refreshPrice();
+  setInterval(function(){
+    if(document.visibilityState === 'visible') refreshPrice();
+  }, 60000);
+})();
+</script>
+</body>
+</html>
