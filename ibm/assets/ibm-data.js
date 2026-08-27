@@ -51,8 +51,8 @@ window.PICK = {
       { source: "Sell-side (25 analysts)", value: "Buy-leaning (8 Strong Buy / 8 Buy / 8 Hold / 1 Sell)" }
     ],
     targets: [
-      { source: "LSEG mean (22 analysts)", value: "$286.86", upside: "+2.0%" },
-      { source: "Zacks", value: "$323.00", upside: "+14.9%" }
+      { source: "LSEG mean (22 analysts)", value: "$286.86", upside: "+2.0% from current" },
+      { source: "Zacks", value: "$323.00", upside: "+14.9% from current" }
     ],
     take: "Ratings are split on purpose: the quant/quality models (Zacks, Verus) both land on Hold \u2014 IBM isn't cheap relative to its growth rate, and the stock is roughly at its 12-month target already. But sell-side analysts skew Buy, largely on the quantum + AI optionality that doesn't show up in a trailing-multiple screen yet. My take for discussion: this reads like a name you own for the dividend and steady execution, not one you chase here \u2014 unless you believe the quantum bet (see video below) is underpriced."
   },
@@ -119,6 +119,7 @@ window.PICK = {
     channel: "WSJ's Bold Names",
     url: "https://youtu.be/7C56Syw5Ml8",
     embed: "https://www.youtube.com/embed/7C56Syw5Ml8",
+    clipUrl: "https://youtu.be/7C56Syw5Ml8?si=OVeCwVpRfHn2NmaO&t=148",
     summary: "WSJ frames IBM's turnaround under CEO Arvind Krishna \u2014 hybrid cloud and consulting brought the company back \u2014 and then turns to the bigger bet: quantum computing. IBM, Google and Microsoft are each racing toward a fault-tolerant, commercially useful quantum computer, and IBM is leaning on its early lead (largest install base of quantum systems, a public roadmap) to try to stay ahead. The takeaway for us: today's profits come from cloud/AI/consulting, but the stock's long-run upside case increasingly hinges on whether IBM's quantum bet pays off before rivals catch up."
   },
 

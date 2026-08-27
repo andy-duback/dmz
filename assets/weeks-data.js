@@ -3,6 +3,7 @@
 // watchlist and in every week's dropdown. Each week lives in its own folder at
 // the repo root (e.g. /ibm/, /nextco/) so URLs stay clean: dmz/ibm, dmz/nextco...
 window.WEEKS = [
+  { company: "Viking Therapeutics", ticker: "VKTX", exchange: "NASDAQ", date: "Aug 27, 2026", slug: "vktx" },
   { company: "International Business Machines", ticker: "IBM", exchange: "NYSE", date: "Jul 2, 2026", slug: "ibm" }
   // { company: "Next Co.", ticker: "TICK", exchange: "NASDAQ", date: "Jul 8, 2026", slug: "nextco" },
 ];

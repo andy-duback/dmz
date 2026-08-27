@@ -47,7 +47,36 @@ window.fetchLiveFinancials = function(symbol){
       })
       .catch(function(){ return tryNext(i+1); });
   }
-  return tryNext(0);
+  // Yahoo's quoteSummary endpoint now requires an auth crumb, so it commonly
+  // fails from a static origin even through a proxy. The chart endpoint (used by
+  // price-feed.js) does work and carries the 52-week range, so fall back to that
+  // for the fields it has rather than leaving them on the static seed.
+  function chartFallback(){
+    if(!window.fetchLivePrice) return Promise.resolve(null);
+    var url = 'https://query1.finance.yahoo.com/v8/finance/chart/' + symbol;
+    var hops = [
+      url,
+      'https://api.allorigins.win/raw?url=' + encodeURIComponent(url),
+      'https://corsproxy.io/?url=' + encodeURIComponent(url)
+    ];
+    function hop(i){
+      if(i >= hops.length) return Promise.resolve(null);
+      return fetch(hops[i], {cache:'no-store'})
+        .then(function(r){ if(!r.ok) throw new Error('bad status'); return r.json(); })
+        .then(function(data){
+          var meta = data && data.chart && data.chart.result && data.chart.result[0] && data.chart.result[0].meta;
+          if(!meta) throw new Error('bad payload');
+          return {
+            fiftyTwoWeekLow: typeof meta.fiftyTwoWeekLow === 'number' ? meta.fiftyTwoWeekLow : null,
+            fiftyTwoWeekHigh: typeof meta.fiftyTwoWeekHigh === 'number' ? meta.fiftyTwoWeekHigh : null
+          };
+        })
+        .catch(function(){ return hop(i+1); });
+    }
+    return hop(0);
+  }
+
+  return tryNext(0).then(function(full){ return full || chartFallback(); });
 };
 
 // ---- formatting helpers shared by any page that renders these numbers ----
